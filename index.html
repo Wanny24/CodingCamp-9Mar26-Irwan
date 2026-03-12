@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Life Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<h1 id="greeting"></h1>
+
+<div id="clock"></div>
+<div id="date"></div>
+
+<h2>Focus Timer</h2>
+<div id="timer">25:00</div>
+
+<button onclick="startTimer()">Start</button>
+<button onclick="stopTimer()">Stop</button>
+<button onclick="resetTimer()">Reset</button>
+
+
+<h2>To Do List</h2>
+
+<input id="taskInput" placeholder="Enter task">
+<button onclick="addTask()">Add</button>
+
+<ul id="taskList"></ul>
+
+
+<h2>Quick Links</h2>
+
+<button onclick="openSite('https://google.com')">Google</button>
+<button onclick="openSite('https://youtube.com')">YouTube</button>
+<button onclick="openSite('https://github.com')">GitHub</button>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
