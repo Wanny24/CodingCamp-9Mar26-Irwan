@@ -77,3 +77,33 @@ border-radius:6px;
 .quick-links button{
 background:#3b82f6;
 }
+
+.links-container{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:10px;
+}
+
+.link-chip{
+background:#4f7df3;
+color:white;
+padding:8px 12px;
+border-radius:8px;
+display:flex;
+align-items:center;
+gap:8px;
+cursor:pointer;
+}
+
+.link-chip span{
+cursor:pointer;
+}
+
+.link-chip button{
+background:none;
+border:none;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}

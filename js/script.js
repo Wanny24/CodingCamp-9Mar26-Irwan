@@ -104,130 +104,153 @@ updateTimer()
 // TODO LIST
 // ======================
 
-let tasks = JSON.parse(localStorage.getItem("tasks")) || []
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 function saveTasks(){
-localStorage.setItem("tasks",JSON.stringify(tasks))
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 function renderTasks(){
 
-const list = document.getElementById("taskList")
-list.innerHTML = ""
+  const list = document.getElementById("taskList");
+  list.innerHTML = "";
 
-tasks.forEach((task,index)=>{
+  tasks.forEach((task,index)=>{
 
-const li = document.createElement("li")
+    const li = document.createElement("li");
 
-li.innerHTML = `
-${task}
-<button onclick="deleteTask(${index})">Delete</button>
-`
+    li.innerHTML = `
+      <div>
+        <input type="checkbox" ${task.done ? "checked":""}
+        onchange="toggleTask(${index})">
 
-list.appendChild(li)
+        <span style="${task.done ? 'text-decoration:line-through':''}">
+        ${task.text}
+        </span>
+      </div>
 
-})
+      <div>
+        <button onclick="editTask(${index})">Edit</button>
+        <button onclick="deleteTask(${index})">Delete</button>
+      </div>
+    `;
+
+    list.appendChild(li);
+
+  });
 
 }
 
 function addTask(){
 
-const input = document.getElementById("taskInput")
-const task = input.value.trim()
+  const input = document.getElementById("taskInput");
+  const text = input.value.trim();
 
-if(task === "") return
+  if(!text) return;
 
-// prevent duplicate task
-if(tasks.includes(task)){
-alert("Task already exists")
-return
+  tasks.push({
+    text:text,
+    done:false
+  });
+
+  input.value="";
+
+  saveTasks();
+  renderTasks();
+
 }
 
-tasks.push(task)
+function toggleTask(index){
 
-input.value=""
+  tasks[index].done = !tasks[index].done;
 
-saveTasks()
-renderTasks()
+  saveTasks();
+  renderTasks();
+
+}
+
+function editTask(index){
+
+  const newText = prompt("Edit task:", tasks[index].text);
+
+  if(!newText) return;
+
+  tasks[index].text = newText;
+
+  saveTasks();
+  renderTasks();
 
 }
 
 function deleteTask(index){
 
-tasks.splice(index,1)
+  tasks.splice(index,1);
 
-saveTasks()
-renderTasks()
+  saveTasks();
+  renderTasks();
 
 }
 
-renderTasks()
+renderTasks();
 
 
 // ======================
 // QUICK LINKS
 // ======================
 
-let links = JSON.parse(localStorage.getItem("links")) || []
+let links = JSON.parse(localStorage.getItem("links")) || [];
+
+function saveLinks(){
+  localStorage.setItem("links", JSON.stringify(links));
+  renderLinks();
+}
 
 function renderLinks(){
 
-const container = document.getElementById("linksContainer")
-container.innerHTML = ""
+  const container = document.getElementById("linksContainer");
+  container.innerHTML = "";
 
-links.forEach((link,index)=>{
+  links.forEach((link,index)=>{
 
-const btn = document.createElement("button")
-btn.textContent = link.name
+    const chip = document.createElement("div");
+    chip.className = "link-chip";
 
-btn.onclick = ()=> window.open(link.url,"_blank")
+    chip.innerHTML = `
+      <span onclick="openSite('${link.url}')">${link.name}</span>
+      <button onclick="removeLink(${index})">×</button>
+    `;
 
-const remove = document.createElement("span")
-remove.textContent = " ✖"
-remove.style.marginLeft = "8px"
-remove.style.cursor = "pointer"
+    container.appendChild(chip);
 
-remove.onclick = ()=>{
-
-links.splice(index,1)
-saveLinks()
-
-}
-
-btn.appendChild(remove)
-container.appendChild(btn)
-
-})
+  });
 
 }
 
 function addLink(){
 
-const name = document.getElementById("linkName").value.trim()
-const url = document.getElementById("linkURL").value.trim()
+  const name = document.getElementById("linkName").value.trim();
+  const url = document.getElementById("linkURL").value.trim();
 
-if(!name || !url){
-alert("Please fill link name and URL")
-return
-}
+  if(!name || !url) return;
 
-links.push({name,url})
+  links.push({name,url});
 
-document.getElementById("linkName").value=""
-document.getElementById("linkURL").value=""
+  document.getElementById("linkName").value="";
+  document.getElementById("linkURL").value="";
 
-saveLinks()
+  saveLinks();
 
 }
 
-function saveLinks(){
+function removeLink(index){
 
-localStorage.setItem("links",JSON.stringify(links))
-renderLinks()
+  links.splice(index,1);
+
+  saveLinks();
 
 }
 
-renderLinks()
+renderLinks();
 
 
 // ======================
