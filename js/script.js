@@ -1,46 +1,60 @@
+// ======================
+// CLOCK + DATE
+// ======================
+
 function updateClock(){
 
-let now = new Date()
+const now = new Date()
 
-let time = now.toLocaleTimeString()
-let date = now.toDateString()
+const timeString = now.toLocaleTimeString()
+const dateString = now.toDateString()
 
-document.getElementById("clock").innerText = time
-document.getElementById("date").innerText = date
+document.getElementById("clock").innerText = timeString
+document.getElementById("date").innerText = dateString
+
+updateGreeting()
 
 }
 
 setInterval(updateClock,1000)
 
-function greeting(){
 
-let hour = new Date().getHours()
+// ======================
+// GREETING
+// ======================
 
-let text = ""
+function updateGreeting(){
+
+const hour = new Date().getHours()
+
+let greeting = ""
 
 if(hour < 12){
-text = "Good Morning"
+greeting = "Good Morning"
 }
-else if(hour < 18){
-text = "Good Afternoon"
+else if(hour < 17){
+greeting = "Good Afternoon"
 }
 else{
-text = "Good Evening"
+greeting = "Good Evening"
 }
 
-document.getElementById("greeting").innerText = text
+document.getElementById("greeting").textContent = greeting
 
 }
 
-greeting()
 
-let time = 1500
-let timer
+// ======================
+// TIMER (POMODORO)
+// ======================
+
+let timerSeconds = 1500
+let timerInterval
 
 function updateTimer(){
 
-let minutes = Math.floor(time / 60)
-let seconds = time % 60
+let minutes = Math.floor(timerSeconds / 60)
+let seconds = timerSeconds % 60
 
 document.getElementById("timer").innerText =
 minutes + ":" + (seconds < 10 ? "0" : "") + seconds
@@ -49,14 +63,17 @@ minutes + ":" + (seconds < 10 ? "0" : "") + seconds
 
 function startTimer(){
 
-timer = setInterval(function(){
+if(timerInterval) return
 
-time--
+timerInterval = setInterval(()=>{
+
+timerSeconds--
 
 updateTimer()
 
-if(time <= 0){
-clearInterval(timer)
+if(timerSeconds <= 0){
+clearInterval(timerInterval)
+timerInterval = null
 alert("Focus session finished!")
 }
 
@@ -65,39 +82,47 @@ alert("Focus session finished!")
 }
 
 function stopTimer(){
-clearInterval(timer)
+clearInterval(timerInterval)
+timerInterval = null
 }
 
 function resetTimer(){
 
-clearInterval(timer)
+clearInterval(timerInterval)
 
-time = 1500
+timerSeconds = 1500
+timerInterval = null
 
 updateTimer()
 
 }
 
 updateTimer()
+
+
+// ======================
+// TODO LIST
+// ======================
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
 function saveTasks(){
-
 localStorage.setItem("tasks",JSON.stringify(tasks))
-
 }
 
 function renderTasks(){
 
-let list = document.getElementById("taskList")
-list.innerHTML=""
+const list = document.getElementById("taskList")
+list.innerHTML = ""
 
 tasks.forEach((task,index)=>{
 
-let li = document.createElement("li")
+const li = document.createElement("li")
 
-li.innerHTML = task + " <button onclick='deleteTask("+index+")'>Delete</button>"
+li.innerHTML = `
+${task}
+<button onclick="deleteTask(${index})">Delete</button>
+`
 
 list.appendChild(li)
 
@@ -107,9 +132,18 @@ list.appendChild(li)
 
 function addTask(){
 
-let input = document.getElementById("taskInput")
+const input = document.getElementById("taskInput")
+const task = input.value.trim()
 
-tasks.push(input.value)
+if(task === "") return
+
+// prevent duplicate task
+if(tasks.includes(task)){
+alert("Task already exists")
+return
+}
+
+tasks.push(task)
 
 input.value=""
 
@@ -129,8 +163,77 @@ renderTasks()
 
 renderTasks()
 
+
+// ======================
+// QUICK LINKS
+// ======================
+
+let links = JSON.parse(localStorage.getItem("links")) || []
+
+function renderLinks(){
+
+const container = document.getElementById("linksContainer")
+container.innerHTML = ""
+
+links.forEach((link,index)=>{
+
+const btn = document.createElement("button")
+btn.textContent = link.name
+
+btn.onclick = ()=> window.open(link.url,"_blank")
+
+const remove = document.createElement("span")
+remove.textContent = " ✖"
+remove.style.marginLeft = "8px"
+remove.style.cursor = "pointer"
+
+remove.onclick = ()=>{
+
+links.splice(index,1)
+saveLinks()
+
+}
+
+btn.appendChild(remove)
+container.appendChild(btn)
+
+})
+
+}
+
+function addLink(){
+
+const name = document.getElementById("linkName").value.trim()
+const url = document.getElementById("linkURL").value.trim()
+
+if(!name || !url){
+alert("Please fill link name and URL")
+return
+}
+
+links.push({name,url})
+
+document.getElementById("linkName").value=""
+document.getElementById("linkURL").value=""
+
+saveLinks()
+
+}
+
+function saveLinks(){
+
+localStorage.setItem("links",JSON.stringify(links))
+renderLinks()
+
+}
+
+renderLinks()
+
+
+// ======================
+// QUICK OPEN (STATIC)
+// ======================
+
 function openSite(url){
-
 window.open(url,"_blank")
-
 }

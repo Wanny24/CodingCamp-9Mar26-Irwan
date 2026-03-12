@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <title>Life Dashboard</title>
 <link rel="stylesheet" href="css/style.css">
@@ -9,6 +10,7 @@
 
 <div class="container">
 
+<!-- CLOCK + GREETING -->
 <div class="card center">
 
 <h1 id="clock"></h1>
@@ -17,8 +19,10 @@
 
 </div>
 
+
 <div class="grid">
 
+<!-- TIMER -->
 <div class="card center">
 
 <h3>Focus Timer</h3>
@@ -31,6 +35,8 @@
 
 </div>
 
+
+<!-- TASK LIST -->
 <div class="card">
 
 <h3>Tasks</h3>
@@ -44,19 +50,30 @@
 
 </div>
 
-<div class="card quick-links center">
+
+<!-- QUICK LINKS -->
+<div class="card quick-links">
 
 <h3>Quick Links</h3>
 
-<button onclick="openSite('https://google.com')">Google</button>
-<button onclick="openSite('https://youtube.com')">YouTube</button>
-<button onclick="openSite('https://github.com')">GitHub</button>
+<div class="add-link">
+
+<input id="linkName" placeholder="Link name">
+<input id="linkURL" placeholder="URL">
+
+<button onclick="addLink()">Add Link</button>
 
 </div>
+
+<div id="linksContainer"></div>
+
+</div>
+
 
 </div>
 
 <script src="js/script.js"></script>
 
 </body>
+
 </html>
